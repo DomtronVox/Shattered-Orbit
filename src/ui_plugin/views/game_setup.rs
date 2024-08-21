@@ -1,6 +1,7 @@
 
 
-use bevy::ecs::world::World;
+use bevy::prelude::*;
+use bevy::ecs::system::SystemState;
 
 
 use bevy_egui::egui::{self};
@@ -9,6 +10,13 @@ use super::super::{
     widget_core::WidgetId,
     SelectedView,
 };
+
+use crate::{
+    default,
+    general_events::StartNewGame,
+    gameworld_settings::GameWorldSettings,
+};
+
 
 
 //The game setup view handles configuring and eventually firing off everything that starts a new game.
@@ -29,8 +37,8 @@ pub fn game_setup_view (_id: WidgetId, world: &mut World, ctx: egui::Context ) {
            
         
            
-            //Confirmation Buttons along the bottom
-            egui::Grid::new("TextLayoutDemo")
+            //Confirmation/reset/exit Buttons along the bottom
+            egui::Grid::new("Control Buttons")
                 .num_columns(3)
                 .show(ui, |ui| {
                
@@ -42,9 +50,18 @@ pub fn game_setup_view (_id: WidgetId, world: &mut World, ctx: egui::Context ) {
                     
                     if ui.button("Start game").clicked() {
 
-                        //collect game settings data from UI
+                        //TODO collect game settings from UI elements and populate GameWorldSettings with them
                         
-                        //Fire off processes
+                        //Get needed variables for bundle creation
+                        let mut system_state: SystemState<(
+                            EventWriter<StartNewGame>
+                        )> = SystemState::new(world);
+                        
+                        let mut ev_newgame = system_state.get_mut(world);
+                        ev_newgame.send(StartNewGame(GameWorldSettings));
+                        
+                        
+                        system_state.apply(world);
                         
                         //Shift view to in game orbital view
                         world.insert_resource::<SelectedView>(SelectedView::OrbitalView);
@@ -58,3 +75,4 @@ pub fn game_setup_view (_id: WidgetId, world: &mut World, ctx: egui::Context ) {
         });
 
 } 
+

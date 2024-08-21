@@ -9,9 +9,9 @@ edition = "2018"
 bevy = "0.11.2"
 
 bevy_egui = "0.21"
-bevy_mod_picking = {version = "0.15.0"}
-bevy_panorbit_camera = "0.8"
-bevy_infinite_grid = { git = "https://github.com/ForesightMiningSoftwareCorporation/bevy_infinite_grid", branch = "main" }
+#bevy_mod_picking = {version = "0.15.0"}
+#bevy_panorbit_camera = "0.8"
+#bevy_infinite_grid = { git = "https://github.com/ForesightMiningSoftwareCorporation/bevy_infinite_grid", branch = "main" }
 
 rayon = "1.5.0"
 ccl-fxhash = "3.0.0"
