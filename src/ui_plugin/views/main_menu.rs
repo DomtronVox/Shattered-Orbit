@@ -51,7 +51,7 @@ pub fn main_menu_view (_id: WidgetId, world: &mut World, ctx: egui::Context ) {
             ui.add_sized([100., 40.], Button::new( RichText::new("Settings").size(20.) ));
             
             if ui.add_sized([100., 40.], Button::new( RichText::new("Quit").size(20.) )).clicked() {
-                world.send_event(AppExit);
+                world.send_event(AppExit::Success);
             }
 
             

@@ -2,7 +2,6 @@
 
 use std::f64::consts::PI;
 
-use bevy::prelude::*;
 use bevy::{
     time::Time,
     ecs::{
@@ -13,6 +12,7 @@ use bevy::{
     transform::components::Transform,
 };
 
+use crate::SimTime;
 
 
 ///Component that holds orbit info
@@ -172,16 +172,17 @@ impl Orbit {
 
 
 ///System that handles advancing the position of all Satellites
-pub fn orbit_motion_system( mut query: Query<(&mut Transform, &mut Orbit)>, time: Res<Time> ) {
-        info!("{}", time.delta_seconds());
+pub fn orbit_motion_system( 
+        mut query: Query<(&mut Transform, &mut Orbit)>, 
+        time: Res<Time<SimTime>> 
+    ) {
+
         //Process all orbits in parallel advancing their position base on time passed
         query.par_iter_mut()
-             .for_each_mut(|(mut transform, mut orbit)| {
+             .for_each(|(mut transform, mut orbit)| {
                  
                  //Calculate orbit updates
-                 info!("1 {:?}", orbit.true_anomaly);
-                 orbit.true_anomaly = orbit.position_after_time( time.delta_seconds() as f64 * 40000. );
-                 info!("2 {:?}", orbit.true_anomaly);
+                 orbit.true_anomaly = orbit.position_after_time( time.delta_seconds() as f64 );
                  
                  //Update transform for entity
                  //> create an x identity vector

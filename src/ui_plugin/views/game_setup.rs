@@ -12,7 +12,7 @@ use super::super::{
 };
 
 use crate::{
-    default,
+//    default,
     general_events::StartNewGame,
     gameworld_settings::GameWorldSettings,
 };
@@ -35,27 +35,25 @@ pub fn game_setup_view (_id: WidgetId, world: &mut World, ctx: egui::Context ) {
                     ui.label("Hello World!");
                 });
            
-        
-           
-            //Confirmation/reset/exit Buttons along the bottom
-            egui::Grid::new("Control Buttons")
-                .num_columns(3)
-                .show(ui, |ui| {
-               
-                    if ui.button("Cancel").clicked() {
-                        world.insert_resource::<SelectedView>(SelectedView::MainMenuView);
-                    }
-                    
-                    ui.add_space(100.0);
-                    
+             
+            //Control Buttons
+            ui.horizontal(|ui| {
+            
+                if ui.button("Cancel").clicked() {
+                    world.insert_resource::<SelectedView>(SelectedView::MainMenuView);
+                }
+                
+                //Right align the last button                
+                ui.with_layout(egui::Layout::top_down(egui::Align::Max), |ui| {
+
                     if ui.button("Start game").clicked() {
 
                         //TODO collect game settings from UI elements and populate GameWorldSettings with them
                         
                         //Get needed variables for bundle creation
-                        let mut system_state: SystemState<(
+                        let mut system_state: SystemState<
                             EventWriter<StartNewGame>
-                        )> = SystemState::new(world);
+                        > = SystemState::new(world);
                         
                         let mut ev_newgame = system_state.get_mut(world);
                         ev_newgame.send(StartNewGame(GameWorldSettings));
@@ -66,11 +64,10 @@ pub fn game_setup_view (_id: WidgetId, world: &mut World, ctx: egui::Context ) {
                         //Shift view to in game orbital view
                         world.insert_resource::<SelectedView>(SelectedView::OrbitalView);
                     }
-                    
-                    ui.end_row();
-               
+                });
+            
             });
-           
+            
             
         });
 

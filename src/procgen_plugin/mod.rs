@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use bevy::render::mesh::shape::UVSphere;
+use bevy::render::{
+    render_asset::RenderAssetUsages,
+};
 
 use crate::{
     general_events::StartNewGame,
@@ -25,10 +27,10 @@ fn handle_generation(
   mut meshes: ResMut<Assets<Mesh>>, mut materials: ResMut<Assets<StandardMaterial>>,
   ) {
 
-    for ev in ev_newgame.iter() {
+    for _ in ev_newgame.read() {
         
         //create camera
-        let mut cam = commands.spawn(Camera3dBundle {
+        commands.spawn(Camera3dBundle {
             transform: Transform::from_xyz(-2.5, 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
             ..default()
         });
@@ -36,7 +38,7 @@ fn handle_generation(
         //create light
         commands.spawn(PointLightBundle {
             point_light: PointLight {
-                intensity: 1500.0,
+                //intensity: 1500.0,
                 shadows_enabled: true,
                 ..default()
             },
@@ -44,18 +46,20 @@ fn handle_generation(
             ..default()
         });
         
+        
+        
         //create earth
         commands.spawn(PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::UVSphere { radius: 1.0, sectors: 16, stacks: 16 })),
-            material: materials.add(Color::rgb_u8(124, 144, 255).into()),
+            mesh: meshes.add(Sphere::default().mesh().uv(32, 16)),
+            material: materials.add(Color::srgb_u8(124, 144, 255)),
             transform: Transform::from_xyz(0.0, 0.5, 0.0),
             ..default()
         });
         
         //create luna
         commands.spawn((PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::UVSphere { radius: 0.5, sectors: 16, stacks: 16 })),
-            material: materials.add(Color::rgb_u8(255, 255, 255).into()),
+            mesh: meshes.add(Sphere::default().mesh().uv(16, 16)),
+            material: materials.add(Color::srgb_u8(255, 255, 255)),
             transform: Transform::from_xyz(0.0, 0.5, 0.0),
             ..default()
             },
