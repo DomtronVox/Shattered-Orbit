@@ -7,6 +7,7 @@ use bevy::render::{
 use crate::{
     general_events::StartNewGame,
     orbital_plugin::Orbit,
+    ui_plugin::cameras::OrbitCameraBundle,
 };
 
 
@@ -30,8 +31,11 @@ fn handle_generation(
     for _ in ev_newgame.read() {
         
         //create camera
-        commands.spawn(Camera3dBundle {
-            transform: Transform::from_xyz(-2.5, 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
+        commands.spawn(OrbitCameraBundle {
+            camera: Camera3dBundle {
+                transform: Transform::from_xyz(-2.5, 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
+                ..default()
+            },
             ..default()
         });
         
@@ -63,6 +67,7 @@ fn handle_generation(
             transform: Transform::from_xyz(0.0, 0.5, 0.0),
             ..default()
             },
+            //Ellipse::new(25.0, 50.0),
             Orbit::new(5.9722e24, 384748000., 0.0549006, 0.02693043, 0., 0.),
         ));
     }

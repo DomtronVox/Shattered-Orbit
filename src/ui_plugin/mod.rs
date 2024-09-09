@@ -4,6 +4,10 @@ pub use widget_core::WidgetId;
 mod views;
 use views::{main_menu_view, game_setup_view, orbital_view};
 
+pub mod cameras;
+use cameras::{orbit_camera_system, OrbitCameraState};
+
+
 use bevy::{
     prelude::*,
     window::PrimaryWindow,
@@ -31,7 +35,11 @@ impl Plugin for UIPlugin {
         app.insert_resource(SelectedView::MainMenuView);
         
         app.add_plugins(EguiPlugin);
-        app.add_systems(Update, draw_ui);
+        app.add_systems(Update, (
+            orbit_camera_system
+                .run_if(any_with_component::<OrbitCameraState>),
+            draw_ui,
+        ));
     }
 }
 
